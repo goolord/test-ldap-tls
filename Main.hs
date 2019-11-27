@@ -6,15 +6,15 @@
 
 module Main where
 
+import Data.ByteString (ByteString)
+import Data.Default.Class
+import GHC.Generics
 import Ldap.Client as Ldap
 import Ldap.Client.Bind
-import GHC.Generics
-import Options.Generic
-import Network.TLS
-import Network.Connection (TLSSettings(..))
-import Data.Default.Class
-import Data.ByteString (ByteString)
 import Network.Connection
+import Network.Connection (TLSSettings(..))
+import Network.TLS
+import Options.Generic
 import qualified Data.ByteString as B
 
 data Opts = Opts
@@ -49,7 +49,7 @@ testConnection Opts{..} tlsSettings = do
     }
   connectionPut con (B.singleton 0xa)
   r <- connectionGet con 1024
-  putStrLn $ show r
+  print r
   connectionClose con
 
 getTlsSettings :: IO (Either String TLSSettings)
