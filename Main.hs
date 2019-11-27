@@ -6,7 +6,7 @@
 
 module Main where
 
-import Ldap.Client
+import Ldap.Client as Ldap
 import Ldap.Client.Bind
 import GHC.Generics
 import Options.Generic
@@ -17,7 +17,6 @@ import Data.ByteString (ByteString)
 
 data Opts = Opts
   { ldapHost :: String
-  , ldapPort :: Int
   , ldapUpn :: Text
   , ldapPassword :: ByteString
   } deriving Generic
@@ -28,7 +27,7 @@ main :: IO ()
 main = do
   Opts{..} <- getRecord "Test program"
   tlsSettings <- either error id <$> getTlsSettings
-  errorOrSuccess <- with (Tls ldapHost tlsSettings) (fromIntegral ldapPort) $ \l -> do
+  errorOrSuccess <- Ldap.with (Tls ldapHost tlsSettings) 636 $ \l -> do
     bindEither l (Dn ldapUpn) (Password ldapPassword)
   print errorOrSuccess
 
