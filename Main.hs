@@ -6,6 +6,7 @@
 
 module Main where
 
+import Control.Exception
 import Data.ByteString (ByteString)
 import Data.Default.Class
 import GHC.Generics
@@ -29,7 +30,9 @@ main :: IO ()
 main = do
   opts <- getRecord "Test program"
   tlsSettings <- either error id <$> getTlsSettings
+  putStrLn "testConnection"
   testConnection opts tlsSettings
+  putStrLn "testLdapClient"
   testLdapClient opts tlsSettings
   
 testLdapClient :: Opts -> TLSSettings -> IO ()
@@ -58,8 +61,6 @@ getTlsSettings = do
   case ecreds of
     Left e -> pure $ Left e
     Right cert -> 
-      pure $ Right $ TLSSettings $ (defaultParamsClient "" "")
-        { clientShared = def 
-          { sharedCredentials = Credentials [cert]
-          }
+      pure $ Right $ defaultTlsSettings 
+        { settingCertificates = [cert]
         }

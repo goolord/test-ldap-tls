@@ -1,0 +1,6 @@
+packages: ./
+
+source-repository-package
+  type: git
+  location: https://github.com/goolord/hs-connection
+  tag: ebb342b99d6e8133999a3c77695d99755bcfc376
